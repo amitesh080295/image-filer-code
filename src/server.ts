@@ -36,16 +36,14 @@ import { type } from "os";
       res.status(400).send("Need a valid image url");
     }
 
-    const localPath: string = await filterImageFromURL(image_url);
+    const filteredPath: string = await filterImageFromURL(image_url);
 
-    console.log("Localpath: ", localPath);
+    const localFiles: string[] = [];
+    localFiles.push(filteredPath);
 
-    const files: string[] = [];
-    files.push(localPath);
-
-    await deleteLocalFiles(files);
-
-    res.status(200).send(`Filtered Image Path: ${localPath}`);
+    res.status(200).sendFile(filteredPath, "", async () => {
+      await deleteLocalFiles(localFiles);
+    });
   });
 
   //! END @TODO1
